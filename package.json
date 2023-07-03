@@ -1,0 +1,16 @@
+{
+  "name": "fete",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "build":"esbuild index.ts --bundle --minify --sourcemap --format=esm --outfile=index.min.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "esbuild": "^0.18.11"
+  }
+}
