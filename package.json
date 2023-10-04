@@ -5,8 +5,7 @@
   "type": "module",
   "main": "index.js",
   "scripts": {
-    "build": "esbuild index.ts --bundle --minify --sourcemap --format=esm --outfile=index.min.js",
-    "build:vite": "vite build",
+    "build": "vite build",
     "test": "vitest",
     "size": "size-limit"
   },
