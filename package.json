@@ -5,12 +5,25 @@
   "type": "module",
   "main": "index.js",
   "scripts": {
-    "build":"esbuild index.ts --bundle --minify --sourcemap --format=esm --outfile=index.min.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "esbuild index.ts --bundle --minify --sourcemap --format=esm --outfile=index.min.js",
+    "build:vite": "vite build",
+    "test": "vitest",
+    "size": "size-limit"
   },
+  "size-limit": [
+    {
+      "path": ["dist/*.js"],
+      "limit": "150b"
+    }
+  ],
   "author": "",
   "license": "MIT",
   "devDependencies": {
-    "esbuild": "^0.18.11"
+    "@size-limit/preset-small-lib": "^9.0.0",
+    "esbuild": "^0.18.11",
+    "jsdom": "^22.1.0",
+    "size-limit": "^9.0.0",
+    "vite-node": "^0.34.6",
+    "vitest": "^0.34.6"
   }
 }
