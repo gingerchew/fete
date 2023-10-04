@@ -1,9 +1,9 @@
 // @vitest-environment jsdom
 import { expect, test } from 'vitest';
-import { fete } from './index';
+import { juhla } from './index';
 
-test('Creates fete object', () => {
-    const $ = fete()
+test('Creates juhla object', () => {
+    const $ = juhla()
 
     expect($).toHaveProperty('on');
     expect($).toHaveProperty('off');
@@ -11,7 +11,7 @@ test('Creates fete object', () => {
 })
 
 test('Adds event listeners and emits events', () => {
-    const $ = fete();
+    const $ = juhla();
 
     let i = 0;
 
@@ -26,7 +26,7 @@ test('Adds event listeners and emits events', () => {
 })
 
 test('Removes event listeners', () => {
-    const $ = fete();
+    const $ = juhla();
     let i = 0;
     const incr = () => i += 1;
     $.on('incr', incr);
@@ -42,8 +42,8 @@ test('Removes event listeners', () => {
 });
 
 test('Handles scope / prefixing', () => {
-    const $ = fete();
-    const _ = fete('scope');
+    const $ = juhla();
+    const _ = juhla('scope');
     let $i = 0;
     let _i = 0;
     _.on('incr', () => _i += 1);
@@ -59,7 +59,7 @@ test('Handles scope / prefixing', () => {
 });
 
 test('Context can be changed', () => {
-    const $ = fete('', document);
+    const $ = juhla('', document);
 
     let i = 0;
 
@@ -72,7 +72,7 @@ test('Context can be changed', () => {
     expect(i).toBe(2);
 
     const $$ = new EventTarget();
-    const _ = fete('', $$);
+    const _ = juhla('', $$);
 
     _.on('customEvent', () => i -= 1);
 

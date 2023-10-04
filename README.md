@@ -1,13 +1,13 @@
-# Fête
+# Juhla
 
-> /fāt/ - A fesitival, celebration
+> Feast, festival, celebration
 
-Fête is a wrapper around the native Event Target interface. It clocks in at around 230b (142b gzip, 110b br), and uses familiar methods.
+Juhla is a wrapper around the native Event Target interface. It clocks in at around 230b (142b gzip, 110b br), and uses familiar methods.
 
 ```js
-import { fete } from 'fete'; // notice it is fete and not fête
+import { juhla } from 'juhla'; // notice it is juhla and not fête
 
-const evt = fete();
+const evt = juhla();
 
 const myHandler = ({ detail }) => console.log(detail);
 
@@ -21,8 +21,8 @@ evt.off('my-custom-event', myHandler);
 If you need to namespace events, pass a string to the first parameter.
 
 ```js
-const myEvt = fete('me');
-const yourEvt = fete('you');
+const myEvt = juhla('me');
+const yourEvt = juhla('you');
 
 myEvt.on('greeting', () => console.log('hi!'));
 yourEvt.on('greeting', () => console.log('yoyoyo'));
