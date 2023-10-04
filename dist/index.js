@@ -1,14 +1,14 @@
-const s = (n = "", o = new EventTarget()) => ({
-  emit(e, t) {
-    o.dispatchEvent(new CustomEvent(n + e, t));
+const s = (t = "", o = new EventTarget()) => ({
+  emit(e, n) {
+    o.dispatchEvent(new CustomEvent(t + e, n));
   },
-  on(e, t, v) {
-    o.addEventListener(n + e, t, v);
+  on(e, n, v) {
+    o.addEventListener(t + e, n, v);
   },
-  off(e, t, v) {
-    o.removeEventListener(n + e, t, v);
+  off(e, n, v) {
+    o.removeEventListener(t + e, n, v);
   }
 });
 export {
-  s as fete
+  s as juhla
 };

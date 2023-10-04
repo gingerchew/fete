@@ -1,15 +1,15 @@
 type Context = Document | EventTarget;
 type EventName = string | HTMLElementEventMap;
 
-type Fete = (prefix?: string, ctx?:Context) => FeteInstance;
-interface FeteInstance {
+type Juhla = (prefix?: string, ctx?:Context) => JuhlaInstance;
+interface JuhlaInstance {
     emit: (name: EventName, options?:Event) => void;
     on: (name: EventName, handler: EventListener, options?: EventListenerOptions) => void;
     off: (name: EventName, handler: EventListener, options?: EventListenerOptions) => void;
 }
 
 /** All events will pass through this EventTarget */
-const fete:Fete = (prefix = '', ctx = new EventTarget):FeteInstance => ({
+const juhla:Juhla = (prefix = '', ctx = new EventTarget):JuhlaInstance => ({
     emit(name, options) {
         ctx.dispatchEvent(new CustomEvent(prefix+name, options));
     },
@@ -20,4 +20,4 @@ const fete:Fete = (prefix = '', ctx = new EventTarget):FeteInstance => ({
         ctx.removeEventListener(prefix+name, handler, options);
     }
 });
-export { fete }
+export { juhla }
