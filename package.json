@@ -15,6 +15,9 @@
       "limit": "150b"
     }
   ],
+  "repository": {
+    "url": "https://github.com:gingerchew/juhla.git"
+  },
   "author": "",
   "license": "MIT",
   "devDependencies": {
