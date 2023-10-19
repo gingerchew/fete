@@ -41,6 +41,19 @@ test('Removes event listeners', () => {
     expect(i).toBe(2);
 });
 
+test('Handles once', () => {
+    let i = 0;
+    const $ = juhla();
+
+    const incr = () => i += 1;
+
+    $.one('incr', incr);
+    $.emit('incr');
+    $.emit('incr');
+    
+    expect(i).toBe(1);
+})
+
 test('Handles scope / prefixing', () => {
     const $ = juhla();
     const _ = juhla('scope');

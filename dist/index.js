@@ -1,12 +1,15 @@
-const s = (t = "", o = new EventTarget()) => ({
+const s = (o = "", v = new EventTarget()) => ({
   emit(e, n) {
-    o.dispatchEvent(new CustomEvent(t + e, n));
+    v.dispatchEvent(new CustomEvent(o + e, n));
   },
-  on(e, n, v) {
-    o.addEventListener(t + e, n, v);
+  on(e, n, t) {
+    v.addEventListener(o + e, n, t);
   },
-  off(e, n, v) {
-    o.removeEventListener(t + e, n, v);
+  off(e, n, t) {
+    v.removeEventListener(o + e, n, t);
+  },
+  one(e, n, t = {}) {
+    v.addEventListener(o + e, n, { ...t, once: !0 });
   }
 });
 export {
