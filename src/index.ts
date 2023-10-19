@@ -6,6 +6,7 @@ interface JuhlaInstance {
     emit: (name: EventName, options?:Event) => void;
     on: (name: EventName, handler: EventListener, options?: EventListenerOptions) => void;
     off: (name: EventName, handler: EventListener, options?: EventListenerOptions) => void;
+    one: (name: EventName, handler: EventListener, options?: EventListenerOptions) => void;
 }
 
 /** All events will pass through this EventTarget */
@@ -18,6 +19,9 @@ const juhla:Juhla = (prefix = '', ctx = new EventTarget):JuhlaInstance => ({
     },
     off(name, handler, options) {
         ctx.removeEventListener(prefix+name, handler, options);
+    },
+    one(name, handler, options = {}) {
+        ctx.addEventListener(prefix+name, handler, { ...options, once: true });
     }
 });
 export { juhla }
