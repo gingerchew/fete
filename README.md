@@ -16,6 +16,8 @@ evt.on('my-custom-event', myHandler);
 evt.emit('my-custom-event', { detail: 'hi :)' }); // hi :)
 
 evt.off('my-custom-event', myHandler);
+// or use one to run the handler one time
+evt.one('my-custom-event', myHandler);
 ```
 
 If you need to namespace events, pass a string to the first parameter.
