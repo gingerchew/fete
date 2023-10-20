@@ -23,6 +23,11 @@ type JuhlaEventListenerOptions = {
     once: boolean;
     passive: boolean;
 } & EventListenerOptions;
+/*
+let evtNames = new Proxy({
+    ready: 'DOMContentLoaded'
+}, { get: (_, evtName) => _[evtName] || evtName });
+*/
 
 /** All events will pass through this EventTarget */
 let j:Juhla = (prefix = '', ctx = new EventTarget):JuhlaInstance => new Proxy<JuhlaInstance>({
@@ -42,7 +47,9 @@ let j:Juhla = (prefix = '', ctx = new EventTarget):JuhlaInstance => new Proxy<Ju
 } as JuhlaInstance, {
     get: (juhlaInstance: JuhlaInstance, eventNameOrMethod: PossibleName) => (
         juhlaInstance[eventNameOrMethod] ?? (
-            (handler: EventListener, options?: JuhlaEventListenerOptions) => juhlaInstance.on(eventNameOrMethod, handler, options)
+            (handler: EventListener, options?: JuhlaEventListenerOptions) => juhlaInstance.on({
+                ready: "DOMContentLoaded"
+            }[eventNameOrMethod] || eventNameOrMethod, handler, options)
         )
     )
 });
