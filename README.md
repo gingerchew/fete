@@ -2,7 +2,7 @@
 
 > Feast, festival, celebration
 
-Juhla is a wrapper around the native Event Target interface. It clocks in at around 247b (166b gzip, 140b br), and uses familiar methods.
+Juhla is a wrapper around the native Event Target interface. It clocks in at around 290b (195b gzip, 168b br), and uses familiar methods.
 
 ```js
 import { juhla } from 'juhla'; // notice it is juhla and not fête
