@@ -5,11 +5,11 @@ let d = (o = "", v = new EventTarget()) => new Proxy({
   on(e, n, t) {
     v.addEventListener(o + e, n, t);
   },
-  off(e, n, t) {
-    v.removeEventListener(o + e, n, t);
-  },
   one(e, n, t = {}) {
     t.once = !0, v.addEventListener(o + e, n, t);
+  },
+  off(e, n, t) {
+    v.removeEventListener(o + e, n, t);
   }
 }, {
   get: (e, n) => e[n] ?? ((t, E) => e.on(n, t, E))

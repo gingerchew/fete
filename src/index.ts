@@ -32,12 +32,12 @@ let j:Juhla = (prefix = '', ctx = new EventTarget):JuhlaInstance => new Proxy<Ju
     on(name, handler, options) {
         ctx.addEventListener(prefix+name, handler, options);
     },
-    off(name, handler, options) {
-        ctx.removeEventListener(prefix+name, handler, options);
-    },
     one(name, handler, options = {} as JuhlaEventListenerOptions) {
         options.once = true;
         ctx.addEventListener(prefix+name, handler, options);
+    },
+    off(name, handler, options) {
+        ctx.removeEventListener(prefix+name, handler, options);
     },
 } as JuhlaInstance, {
     get: (juhlaInstance: JuhlaInstance, eventNameOrMethod: PossibleName) => (
