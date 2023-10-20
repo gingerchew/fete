@@ -1,17 +1,19 @@
-const s = (o = "", v = new EventTarget()) => ({
+let d = (E = "", o = new EventTarget()) => new Proxy({
   emit(e, n) {
-    v.dispatchEvent(new CustomEvent(o + e, n));
+    o.dispatchEvent(new CustomEvent(E + e, n));
   },
   on(e, n, t) {
-    v.addEventListener(o + e, n, t);
+    o.addEventListener(E + e, n, t);
   },
   off(e, n, t) {
-    v.removeEventListener(o + e, n, t);
+    o.removeEventListener(E + e, n, t);
   },
   one(e, n, t = {}) {
-    v.addEventListener(o + e, n, { ...t, once: !0 });
+    t.once = !0, o.addEventListener(E + e, n, t);
   }
+}, {
+  get: (e, n) => e[n] ? e[n] : (t, v) => e.on(n, t, v)
 });
 export {
-  s as juhla
+  d as juhla
 };
