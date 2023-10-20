@@ -95,3 +95,15 @@ test('Context can be changed', () => {
 
     expect(i).toBe(0);
 });
+
+test('Handles alias event listeners', () => {
+    const $ = juhla();
+    let i = 0;
+    const incr = () => i += 1;
+
+    $.click(incr);
+
+    $.emit('click');
+
+    expect(i).toBe(1);
+})

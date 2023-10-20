@@ -1,6 +1,6 @@
 {
   "name": "juhla",
-  "version": "1.0.1",
+  "version": "1.2.0",
   "description": "",
   "type": "module",
   "main": "dist/index.js",
@@ -11,8 +11,10 @@
   },
   "size-limit": [
     {
-      "path": ["dist/*.js"],
-      "limit": "150b"
+      "path": [
+        "dist/*.js"
+      ],
+      "limit": "175b"
     }
   ],
   "repository": {
