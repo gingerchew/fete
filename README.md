@@ -33,10 +33,11 @@ myEvt.emit('greeting') // hi!
 yourEvt.emit('greeting') // yoyoyo
 ```
 
-Aliased events, like `$(document).click()` from jQuery, are also supported.
+Aliased events are also supported.
 
 ```js
-const $ = juhla();
+// $(document);
+const $ = juhla('', document);
 
 $.click(incr); // is the same as
 $.on('click', incr);
