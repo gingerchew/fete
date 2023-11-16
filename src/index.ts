@@ -23,11 +23,6 @@ type JuhlaEventListenerOptions = {
     once: boolean;
     passive: boolean;
 } & EventListenerOptions;
-/*
-let evtNames = new Proxy({
-    ready: 'DOMContentLoaded'
-}, { get: (_, evtName) => _[evtName] || evtName });
-*/
 
 /** All events will pass through this EventTarget */
 let j:Juhla = (prefix = '', ctx = new EventTarget):JuhlaInstance => new Proxy<JuhlaInstance>({
