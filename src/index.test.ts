@@ -107,3 +107,16 @@ test('Handles alias event listeners', () => {
 
     expect(i).toBe(1);
 })
+
+test('Supports multiple events', () => {
+    const $ = juhla();
+
+    let i = 0;
+
+    $.on('incr incr2', () => i += 1);
+
+    $.emit('incr');
+    $.emit('incr2');
+
+    expect(i).toBe(2);
+})

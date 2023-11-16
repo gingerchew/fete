@@ -1,21 +1,25 @@
-let v = (o = "", d = new EventTarget()) => new Proxy({
-  emit(n, e) {
-    d.dispatchEvent(new CustomEvent(o + n, e));
+let E = (r = "", s = new EventTarget(), n) => new Proxy({
+  emit(t, e) {
+    s.dispatchEvent(new CustomEvent(r + t, e));
   },
-  on(n, e, t) {
-    d.addEventListener(o + n, e, t);
+  on(t, e, o) {
+    for (n of t.split` `)
+      s.addEventListener(r + n, e, o);
   },
-  one(n, e, t = {}) {
-    t.once = !0, d.addEventListener(o + n, e, t);
+  one(t, e, o = {}) {
+    o.once = !0;
+    for (n of t.split` `)
+      s.addEventListener(r + n, e, o);
   },
-  off(n, e, t) {
-    d.removeEventListener(o + n, e, t);
+  off(t, e, o) {
+    for (n of t.split` `)
+      s.removeEventListener(r + n, e, o);
   }
 }, {
-  get: (n, e) => n[e] ?? ((t, E) => n.on({
+  get: (t, e) => t[e] ?? ((o, d) => t.on({
     ready: "DOMContentLoaded"
-  }[e] || e, t, E))
+  }[e] ?? e, o, d))
 });
 export {
-  v as juhla
+  E as juhla
 };
