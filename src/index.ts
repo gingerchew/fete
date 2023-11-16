@@ -1,5 +1,5 @@
 type Context = EventTarget | HTMLElement;
-type PossibleName = keyof HTMLElementEventMap | keyof JuhlaMethods | string;
+type PossibleName = keyof HTMLElementEventMap | keyof JuhlaMethods | string
 
 type Juhla = (prefix?: string, ctx?:Context) => JuhlaInstance;
 
@@ -10,9 +10,9 @@ type JuhlaMethods = {
     one:  JuhlaMethodsFunc;
 }
 
-type JuhlaAliasFunc = (handler: EventListener, options?: JuhlaEventListenerOptions) => void;
-type JuhlaMethodsFunc = (name: PossibleName, handler: EventListener, options?: JuhlaEventListenerOptions) => void;
-type JuhlaEmitFunc = (name: PossibleName, options?: Event) => void;
+type JuhlaAliasFunc = (handler: EventListener, options?: JuhlaEventListenerOptions) => unknown;
+type JuhlaMethodsFunc = (name: PossibleName | PossibleName[], handler: EventListener, options?: JuhlaEventListenerOptions) => unknown;
+type JuhlaEmitFunc = (name: PossibleName | PossibleName[], options?: Event) => unknown;
 
 type JuhlaInstance = {
     [index in keyof HTMLElementEventMap]: JuhlaAliasFunc;
@@ -24,39 +24,27 @@ type JuhlaEventListenerOptions = {
 } & EventListenerOptions;
 
 /** All events will pass through this EventTarget */
-let j:Juhla = (prefix = '', ctx = new EventTarget, n?:never):JuhlaInstance => {
+let j:Juhla = (prefix = '', ctx = new EventTarget):JuhlaInstance => {
     return new Proxy<JuhlaInstance>({
-        emit(name, options) {
-            // @ts-ignore
-            ctx.dispatchEvent(new CustomEvent(prefix+name, options));
-        },
-        on(name, handler, options) {
-            // @ts-ignore
-            for (n of name.split` `) {
-                ctx.addEventListener(prefix + n, handler, options)
-            }
-        },
-        one(name, handler, options = {} as JuhlaEventListenerOptions) {
-            options.once = true;
-            // @ts-ignore
-            for (n of name.split` `) {
-                ctx.addEventListener(prefix+n, handler, options);
-            }
-        },
-        off(name, handler, options) {
-            // @ts-ignore
-            for (n of name.split` `) {
-                ctx.removeEventListener(prefix+n, handler, options);
-            }
-        },
+        // @ts-ignore
+        emit: (names, options) => names.map(n => ctx.dispatchEvent(new CustomEvent(n, options))),
+        // @ts-ignore
+        on: (names, handler, options) => names.map(n => ctx.addEventListener(n, handler, options)),
+        // @ts-ignore
+        one: (names, handler, options = {}) => (options.once = true, names.map(n => ctx.addEventListener(n, handler, options))),
+        // @ts-ignore
+        off: (names, handler, options) => names.map(n => ctx.removeEventListener(n, handler, options)),
     } as JuhlaInstance, {
-        get: (juhlaInstance: JuhlaInstance, eventNameOrMethod: PossibleName) => (
-            juhlaInstance[eventNameOrMethod] ?? (
-                (handler: EventListener, options?: JuhlaEventListenerOptions) => juhlaInstance.on({
-                    ready: "DOMContentLoaded"
-                }[eventNameOrMethod as string] ?? eventNameOrMethod, handler, options)
-            )
-        )
+        get: (juhlaInstance: JuhlaInstance, eventNameOrMethod: PossibleName) => 
+                (name:PossibleName, handler:EventListener, options:JuhlaEventListenerOptions) => {
+                    juhlaInstance[eventNameOrMethod]?.(name.split(` `).map((n:string) => prefix+n), handler, options) ??
+                        juhlaInstance.on([{ 
+                                ready: "DOMContentLoaded",
+                            }[eventNameOrMethod] ?? eventNameOrMethod],
+                            name as unknown as EventListener,
+                            (handler || {}) as unknown as JuhlaEventListenerOptions /* as options */
+                        );
+            }
     });
 }
 export { j as juhla }

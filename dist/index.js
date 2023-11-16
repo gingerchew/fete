@@ -1,25 +1,24 @@
-let E = (r = "", s = new EventTarget(), n) => new Proxy({
-  emit(t, e) {
-    s.dispatchEvent(new CustomEvent(r + t, e));
-  },
-  on(t, e, o) {
-    for (n of t.split` `)
-      s.addEventListener(r + n, e, o);
-  },
-  one(t, e, o = {}) {
-    o.once = !0;
-    for (n of t.split` `)
-      s.addEventListener(r + n, e, o);
-  },
-  off(t, e, o) {
-    for (n of t.split` `)
-      s.removeEventListener(r + n, e, o);
-  }
+let d = (o = "", a = new EventTarget()) => new Proxy({
+  // @ts-ignore
+  emit: (t, e) => t.map((n) => a.dispatchEvent(new CustomEvent(n, e))),
+  // @ts-ignore
+  on: (t, e, n) => t.map((r) => a.addEventListener(r, e, n)),
+  // @ts-ignore
+  one: (t, e, n = {}) => (n.once = !0, t.map((r) => a.addEventListener(r, e, n))),
+  // @ts-ignore
+  off: (t, e, n) => t.map((r) => a.removeEventListener(r, e, n))
 }, {
-  get: (t, e) => t[e] ?? ((o, d) => t.on({
-    ready: "DOMContentLoaded"
-  }[e] ?? e, o, d))
+  get: (t, e) => (n, r, p) => {
+    t[e]?.(n.split(" ").map((E) => o + E), r, p) ?? t.on(
+      [{
+        ready: "DOMContentLoaded"
+      }[e] ?? e],
+      n,
+      r || {}
+      /* as options */
+    );
+  }
 });
 export {
-  E as juhla
+  d as juhla
 };
