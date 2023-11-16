@@ -42,7 +42,9 @@ let j:Juhla = (prefix = '', ctx = new EventTarget):JuhlaInstance => new Proxy<Ju
 } as JuhlaInstance, {
     get: (juhlaInstance: JuhlaInstance, eventNameOrMethod: PossibleName) => (
         juhlaInstance[eventNameOrMethod] ?? (
-            (handler: EventListener, options?: JuhlaEventListenerOptions) => juhlaInstance.on(eventNameOrMethod, handler, options)
+            (handler: EventListener, options?: JuhlaEventListenerOptions) => juhlaInstance.on({
+                ready: "DOMContentLoaded"
+            }[eventNameOrMethod] || eventNameOrMethod, handler, options)
         )
     )
 });
