@@ -14,14 +14,13 @@ test('Adds event listeners and emits events', () => {
     const $ = juhla();
 
     let i = 0;
+    let incr = () => i += 1;
+    $.on('incr', incr);
 
-    $.on('incr', () => i += 1);
-
     $.emit('incr');
     $.emit('incr');
     $.emit('incr');
     $.emit('incr');
-
     expect(i).toBe(4);
 })
 

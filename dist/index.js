@@ -1,21 +1,23 @@
-let s = (r = "", p = new EventTarget()) => new Proxy({
-  // @ts-ignore
-  emit: (t, e) => t.map((n) => p.dispatchEvent(new CustomEvent(n, e))),
-  // @ts-ignore
-  on: (t, e, n) => t.map((o) => p.addEventListener(o, e, n)),
-  // @ts-ignore
-  off: (t, e, n) => t.map((o) => p.removeEventListener(o, e, n))
-}, {
-  get: (t, e) => (n, o, a) => {
-    t[e]?.(n.split(" ").map((i) => r + i), o, a) ?? t.on(
-      [{
-        ready: "DOMContentLoaded"
-      }[e] ?? e],
-      n,
-      o || {}
-      /* as options */
-    );
+let s = (E = "", o = new EventTarget()) => new Proxy({
+  emit(e, p) {
+    e.map((t) => o.dispatchEvent(new CustomEvent(t, p)));
+  },
+  on(e, p, t) {
+    e.map((i) => o.addEventListener(i, p, t));
+  },
+  off(e, p, t) {
+    e.map((i) => o.removeEventListener(i, p, t));
   }
+}, {
+  get: (e, p) => (t, i, m) => e[p] ? e[p](
+    t.split(" ").map((n) => E + n),
+    i,
+    m
+  ) : e.on(
+    [p],
+    t,
+    i
+  )
 });
 export {
   s as juhla
