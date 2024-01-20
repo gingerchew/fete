@@ -6,8 +6,7 @@ type Juhla = (prefix?: string, ctx?:Context) => JuhlaInstance;
 type JuhlaMethods = {
     emit: JuhlaEmitFunc;
     on: JuhlaMethodsFunc;
-    off:  JuhlaMethodsFunc;
-    one:  JuhlaMethodsFunc;
+    off: JuhlaMethodsFunc;
 }
 
 type JuhlaAliasFunc = (handler: EventListener, options?: JuhlaEventListenerOptions) => unknown;
@@ -19,8 +18,8 @@ type JuhlaInstance = {
 } & JuhlaMethods;
 
 type JuhlaEventListenerOptions = {
-    once: boolean;
-    passive: boolean;
+    once?: boolean;
+    passive?: boolean;
 } & EventListenerOptions;
 
 /** All events will pass through this EventTarget */
@@ -30,8 +29,6 @@ let j:Juhla = (prefix = '', ctx = new EventTarget):JuhlaInstance => {
         emit: (names, options) => names.map(n => ctx.dispatchEvent(new CustomEvent(n, options))),
         // @ts-ignore
         on: (names, handler, options) => names.map(n => ctx.addEventListener(n, handler, options)),
-        // @ts-ignore
-        one: (names, handler, options = {}) => (options.once = true, names.map(n => ctx.addEventListener(n, handler, options))),
         // @ts-ignore
         off: (names, handler, options) => names.map(n => ctx.removeEventListener(n, handler, options)),
     } as JuhlaInstance, {

@@ -47,7 +47,7 @@ test('Handles once', () => {
 
     const incr = () => i += 1;
 
-    $.one('incr', incr);
+    $.on('incr', incr, { once: true });
     $.emit('incr');
     $.emit('incr');
     
