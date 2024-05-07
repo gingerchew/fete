@@ -1,52 +1,58 @@
-type Context = EventTarget | HTMLElement;
-type PossibleName = keyof HTMLElementEventMap | keyof JuhlaMethods | string
+type Context = EventTarget | Document | Window | HTMLElement;
 
-type Juhla = (prefix?: string, ctx?: Context) => JuhlaInstance;
-/*
-type JuhlaMethods = {
-    emit: JuhlaEmitFunc;
-    on: JuhlaMethodsFunc;
-    off: JuhlaMethodsFunc;
-}
-*/
+// https://github.com/microsoft/TypeScript/issues/33047#issuecomment-704005614
+type EventMap<T extends Context> = T extends Document
+	? DocumentEventMap
+	: T extends Window
+	? WindowEventMap
+	: HTMLElementEventMap;
+type EventTypes<T extends EventTarget> = keyof EventMap<T> & string;
+type EventValue<T extends EventTarget, K extends EventTypes<T>> = Extract<EventMap<T>[K], Event>;
+
 
 interface JuhlaMethods {
     emit: JuhlaEmitFunc;
     on: JuhlaMethodsFunc;
     off: JuhlaMethodsFunc;
+    one: JuhlaMethodsFunc;
 }
 
-type JuhlaAliasFunc = (handler: EventListener, options?: JuhlaEventListenerOptions) => unknown;
-type JuhlaMethodsFunc = (name: PossibleName[], handler: EventListener, options?: JuhlaEventListenerOptions) => unknown;
-type JuhlaEmitFunc = (name: PossibleName[], options?: Event) => unknown;
+type JuhlaMethodsFunc<T = EventMap<Context>> = (names: (keyof T)[], handler: EventListener, options?: AddEventListenerOptions) => unknown;
+type JuhlaEmitFunc<T = EventMap<Context>> = (names: (keyof T)[], options?: CustomEventInit) => unknown;
 
-type JuhlaInstance = {
-    [index in keyof HTMLElementEventMap]: JuhlaAliasFunc;
+type JuhlaInstance ={
+    [index in EventTypes<Context>]: (handler: EventListener, options?: AddEventListenerOptions) => unknown;
 } & JuhlaMethods;
 
-type JuhlaEventListenerOptions = {
-    once?: boolean;
-    passive?: boolean;
-} & EventListenerOptions;
 
-/** All events will pass through this EventTarget */
-let j: Juhla = (prefix = '', ctx = new EventTarget): JuhlaInstance =>
-    new Proxy<JuhlaInstance>({
-        emit(names, options) { names.map(n => ctx.dispatchEvent(new CustomEvent(n, options))) },
-        on(names, handler, options) { names.map(n => ctx.addEventListener(n, handler, options)) },
-        off(names, handler, options) { names.map(n => ctx.removeEventListener(n, handler, options)) }
-    } as JuhlaInstance, {
-        get: (juhlaInstance: JuhlaInstance, eventNameOrMethod: PossibleName) =>
-            (name: PossibleName, handler: EventListener, options?: JuhlaEventListenerOptions) =>
-                !juhlaInstance[eventNameOrMethod] ? juhlaInstance.on(
-                    [eventNameOrMethod],
-                    name as unknown as EventListener,
-                    handler as unknown as JuhlaEventListenerOptions
-                ) : juhlaInstance[eventNameOrMethod](
-                    name.split(' ').map(n => prefix + n),
-                    handler,
-                    options
-                )
 
+const J = <T extends EventTypes<Context>>(ctx:Context = new EventTarget) => {
+    return new Proxy({
+        emit(names, options?: CustomEventInit) { 
+            names.map(n => ctx.dispatchEvent(new CustomEvent(n, options)));
+        },
+        on(names, handler, options?: AddEventListenerOptions) {
+            names.map(n => ctx.addEventListener(n, handler, options));
+        },
+        off(names, handler, options?: AddEventListenerOptions) {
+            names.map(n => ctx.removeEventListener(n, handler, options));
+        },
+        one(names, handler, options:AddEventListenerOptions = {}) {
+            options.once = true;
+            names.map(n => ctx.addEventListener(n, handler, options));
+        }
+    }, {
+        get: (juhlaInstance: JuhlaMethods, possibleEventAlias: keyof JuhlaInstance) => 
+            <E>(
+                name: E extends keyof EventTypes<typeof ctx> ? EventTypes<typeof ctx> : string,
+                handler: typeof possibleEventAlias extends keyof HTMLElementEventMap ? 
+                    AddEventListenerOptions : 
+                    EventListener, 
+                options?: AddEventListenerOptions
+            ) =>
+                possibleEventAlias in juhlaInstance ?
+                    juhlaInstance[possibleEventAlias](name.split(' '), handler, options) :
+                    juhlaInstance.on([possibleEventAlias as T], name as unknown as EventListener, handler as unknown as AddEventListenerOptions)
     });
-export { j as juhla }
+}
+export { J as juhla }
