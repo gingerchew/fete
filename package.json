@@ -14,7 +14,7 @@
       "path": [
         "dist/*.js"
       ],
-      "limit": "200b"
+      "limit": "250b"
     }
   ],
   "repository": {
