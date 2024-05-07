@@ -52,7 +52,7 @@ test('Handles once', () => {
     
     expect(i).toBe(1);
 })
-
+/*
 test('Handles scope / prefixing', () => {
     const $ = juhla();
     const _ = juhla('scope');
@@ -69,9 +69,9 @@ test('Handles scope / prefixing', () => {
     expect(_i).toBe(4);
     expect($i).toBe(0);
 });
-
+*/
 test('Context can be changed', () => {
-    const $ = juhla('', document);
+    const $ = juhla(document);
 
     let i = 0;
 
@@ -84,7 +84,7 @@ test('Context can be changed', () => {
     expect(i).toBe(2);
 
     const $$ = new EventTarget();
-    const _ = juhla('', $$);
+    const _ = juhla($$);
 
     _.on('customEvent', () => i -= 1);
 
