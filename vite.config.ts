@@ -9,5 +9,8 @@ export default defineConfig({
             fileName: 'index',
             formats: ['es']
         },
+    },
+    esbuild: {
+        mangleProps: /^_/,
     }
 })
